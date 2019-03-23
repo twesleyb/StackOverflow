@@ -8,7 +8,7 @@ p1
 # Build annotation table with gridExtra::tableGrob().
 library(gridExtra)
 mytable <- summary(data)
-tab <- tableGrob(mytable, rows=NULL, theme=tt)
+tab <- tableGrob(mytable, rows=NULL)
 
 # Extract x and ylims for positioning table with ggplot_build(). 
 xrange <- unlist(ggplot_build(p1)$layout$panel_params[[1]][1])
