@@ -21,8 +21,8 @@ ymax = max(yrange)
 ydelta = ymax-ymin
 
 # Add annotation table to plot.
-p1 <- p1 + annotation_custom(tab, xmin = xmin-0.55*xdelta, xmax, ymin = ymin+0.55*ydelta, ymax)
-p1
+p2 <- p1 + annotation_custom(tab, xmin = xmin-0.55*xdelta, xmax, ymin = ymin+0.55*ydelta, ymax)
+p2
 
 # Generate figure with multiple plots using cowplot::plot_grid(). 
 library(cowplot)
