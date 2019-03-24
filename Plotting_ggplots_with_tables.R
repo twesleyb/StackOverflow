@@ -26,4 +26,21 @@ p2
 
 # Generate figure with multiple plots using cowplot::plot_grid(). 
 library(cowplot)
-plot_grid(p1,p1,p1,p1, labels = "auto")
+fig <- plot_grid(p2,p2,p2,p2, labels = "auto")
+
+## Exploring changing the device size.
+# I think the default device size is 7x7 inches. 
+png("default_size.png",width = 7, height = 7, res = 300, units = "in")
+p2
+dev.off()
+
+# Plot2x
+png("2x_size.png",width = 14, height = 14, res = 300, units = "in")
+p2
+dev.off()
+
+# Plot3x
+png("3x_size.png",width = 21, height = 21, res = 300, units = "in")
+p2
+dev.off()
+
