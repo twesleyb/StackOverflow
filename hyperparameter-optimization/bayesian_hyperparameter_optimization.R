@@ -8,27 +8,9 @@ cat("\f")
 options(stringsAsFactors = FALSE)
 
 # Insure no other packages are loaded.
-library(magrittr)
-library(JGmisc)
-detachAllPackages(keep = NULL)
-
-# Set the working directory.
-rootdir <- "D:/projects/StackOverflow/hyperparameter-optimization"
-#rootdir <- "C:/Users/User/Documents/Tyler/Synaptopathy-Proteomics"
-setwd(rootdir)
-
-# Load TAMPOR cleanDat from file:
-Rdatadir <- "D:/projects/Synaptopathy-Proteomics/RData"
-datafile <- paste(Rdatadir, "Combined","TAMPOR_data_outliersRemoved.Rds", sep = "/")
-data <- log2(readRDS(datafile))
-
-# Get a random subset of 1000 genes. Obscure labels.
-rand_idx <- sample(dim(data)[1], 1000, replace = FALSE)
-data <- data[rand_idx,]
-rownames(data) <- paste0("protein_", c(1:nrow(data)))
-colnames(data) <- paste0("sample_", c(1:ncol(data)))
-saveRDS(data,"data/data.RDS")
-data <- readRDS("data/data.RDS")
+#library(magrittr)
+#library(JGmisc)
+#detachAllPackages(keep = NULL)
 
 # Load dependencies:
 suppressPackageStartupMessages({
@@ -36,12 +18,21 @@ suppressPackageStartupMessages({
   library(WGCNA)
   library(igraph)
   library(doParallel)
-  library(ggdendro)
 })
+
+# Set the working directory.
+rootdir <- "D:/projects/StackOverflow/hyperparameter-optimization"
+setwd(rootdir)
+
+# Get the data from github.
+url <- "https://github.com/twesleyb/StackOverflow/raw/master/hyperparameter-optimization/data/data.RDS"
+data <- readRDS(gzcon(url(url)))
+dim(data)
+data[1:5,1:5]
 
 # Allow parallel calculations:
 allowWGCNAThreads()
-nThreads <- 9
+nThreads <- detectCores(all.tests = FALSE, logical = TRUE)
 clusterLocal <- makeCluster(c(rep("localhost", nThreads)), type = "SOCK")
 registerDoParallel(clusterLocal)
 
@@ -80,26 +71,15 @@ plot(res1$dendro, labels = FALSE)
 
 # BayesianOptimization:
 results <- BayesianOptimization(FUN = score_network_hclust, 
-                                bounds = list(k = c(2L,3022L)), # maximum number of clusters is number of nodes...
+                                bounds = list(k = c(2L,1000L)), # maximum number of clusters is number of proteins...
                                 parallel = TRUE, 
-                                bulkNew = 9,
+                                bulkNew = nThreads,
                                 packages = c("WGCNA","igraph"), 
                                 export = "data",
                                 initPoints = 5, 
-                                nIters = 100,
+                                nIters = 1000,
                                 gsPoints = 100, 
                                 verbose = 1)
 
 results$BestPars
-# Iteration   k      Score elapsedSecs
-# 1:         0 486 0.01670862     12 secs
-# 2:         1 486 0.01670862     23 secs
-
-#------------------------------------------------------------------------------
-## Are these really the best parameters?
-score_network(k = 146)
-score_network(k = 1000)
-score_network(k = 3022)
-
-#------------------------------------------------------------------------------
 
