@@ -40,6 +40,9 @@ registerDoParallel(clusterLocal)
 ## Define a function to be optimized.
 #------------------------------------------------------------------------------
 
+# Perform heirarchical clustering of data. Cut into k groups. Overall quality,
+# is described by the network partitions modularity, q.
+
 score_network_hclust <- function(k){
   # Calculate the signed adjaceny matrix of data.
   # Perform heirarchical clustering and divide into k groups.
@@ -56,7 +59,7 @@ score_network_hclust <- function(k){
 
 # Before proceeding, test the function:
 res1 <- score_network_hclust(k = 2)
-res2 <- score_network_hclust(k = 20)
+res2 <- score_network_hclust(k = 20) # should be a better fit.
 
 # Examine the results.
 res1$Score
