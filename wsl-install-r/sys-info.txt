@@ -1,0 +1,16 @@
+                                    sysname 
+                                    "Linux" 
+                                    release 
+                    "4.4.0-18362-Microsoft" 
+                                    version 
+"#1-Microsoft Mon Mar 18 12:02:00 PST 2019" 
+                                   nodename 
+                                "windows10" 
+                                    machine 
+                                   "x86_64" 
+                                      login 
+                                  "unknown" 
+                                       user 
+                                 "twesleyb" 
+                             effective_user 
+                                 "twesleyb" 
