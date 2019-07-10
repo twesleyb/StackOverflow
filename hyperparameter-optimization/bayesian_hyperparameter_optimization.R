@@ -13,14 +13,12 @@ library(JGmisc)
 detachAllPackages(keep = NULL)
 
 # Set the working directory.
-rootdir <- "D:/projects/Synaptopathy-Proteomics"
+rootdir <- "D:/projects/StackOverflow/hyperparameter-optimization"
 #rootdir <- "C:/Users/User/Documents/Tyler/Synaptopathy-Proteomics"
 setwd(rootdir)
 
-# Set any other directories.
-Rdatadir <- paste(rootdir, "RData", sep = "/")
-
 # Load TAMPOR cleanDat from file:
+Rdatadir <- "D:/projects/Synaptopathy-Proteomics/RData"
 datafile <- paste(Rdatadir, "Combined","TAMPOR_data_outliersRemoved.Rds", sep = "/")
 data <- log2(readRDS(datafile))
 
@@ -29,7 +27,8 @@ rand_idx <- sample(dim(data)[1], 1000, replace = FALSE)
 data <- data[rand_idx,]
 rownames(data) <- paste0("protein_", c(1:nrow(data)))
 colnames(data) <- paste0("sample_", c(1:ncol(data)))
-saveRDS(data)
+saveRDS(data,"data/data.RDS")
+data <- readRDS("data/data.RDS")
 
 # Load dependencies:
 suppressPackageStartupMessages({
