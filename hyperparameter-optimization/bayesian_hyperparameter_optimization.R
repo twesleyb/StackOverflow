@@ -75,14 +75,38 @@ plot(res1$dendro, labels = FALSE)
 # BayesianOptimization:
 results <- BayesianOptimization(FUN = score_network_hclust, 
                                 bounds = list(k = c(2L,1000L)), # maximum number of clusters is number of proteins...
-                                parallel = TRUE, 
-                                bulkNew = nThreads,
                                 packages = c("WGCNA","igraph"), 
                                 export = "data",
-                                initPoints = 5, 
-                                nIters = 1000,
-                                gsPoints = 100, 
+                                initPoints = 3, 
+                                nIters = 10,
+                                gsPoints = 1,
+                                parallel = TRUE,
+                                bulkNew = nThreads,
                                 verbose = 1)
 
 results$BestPars
 
+#------------------------------------------------------------------------------
+
+score_network_hclust <- function(k){
+  # Calculate the signed adjaceny matrix of data.
+  # Perform heirarchical clustering and divide into k groups.
+  r <- 1 - bicor(t(data))
+  adjm <- ((1 + r) / 2)^12 # Signed, weighted adjacency matrix. 
+  diss <- 1 - adjm
+  diag(diss) <- 0
+  hc <- hclust(as.dist(diss), method = "average")
+  membership <- cutree(hc, k)
+  g <- graph_from_adjacency_matrix(adjm, mode = "undirected", weighted = TRUE)
+  q <- modularity(g, membership, weights = edge_attr(g, "weight"))
+  return(list(Score = q, dendro = hc))
+}
+
+# Before proceeding, test the function:
+res1 <- score_network_hclust(k = 2)
+res2 <- score_network_hclust(k = 20) # should be a better fit.
+
+# Examine the results.
+res1$Score
+res2$Score
+plot(res1$dendro, labels = FALSE)
