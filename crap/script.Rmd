@@ -1,9 +1,0 @@
----
-title: "R Notebook"
-date: '`r format(Sys.time(), "%d %B, %Y")`'
-output: 
-  pdf_document:
-bibliography: D:\\Documents\\R\\StackOverflow\\bib\\a.bib
----
-
-[@bibtex]
